@@ -1,3 +1,4 @@
+
 export enum WorkspaceMode {
   QUEUE = 'QUEUE',
   TICKET = 'TICKET',
@@ -39,4 +40,9 @@ export interface AgentContext {
   currentTicketId?: string;
   customerContext?: CustomerProfile;
   metrics?: any;
+}
+
+// Props for workspaces that need navigation
+export interface WorkspaceProps {
+  onNavigate: (mode: WorkspaceMode) => void;
 }

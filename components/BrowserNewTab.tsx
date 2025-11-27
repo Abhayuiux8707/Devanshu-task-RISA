@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Globe, Plus, Command, Sparkles, ArrowLeft, ArrowRight, RotateCcw, AlertTriangle, MessageSquare, Users, BookOpen, Smile, Bot, Inbox, Activity } from './ui/Icons';
+import { Search, Globe, Plus, Command, Sparkles, ArrowLeft, ArrowRight, RotateCcw, AlertTriangle, MessageSquare, Users, BookOpen, Smile, Bot, Inbox, Activity, BarChart2 } from './ui/Icons';
 import { WorkspaceMode } from '../types';
 
 interface BrowserNewTabProps {
@@ -43,7 +43,17 @@ const BrowserNewTab: React.FC<BrowserNewTabProps> = ({ onNavigate }) => {
             <span className="text-slate-400">risa://</span>
             <span className="text-slate-600">support.dashboard</span>
          </div>
-         <div className="w-20"></div>
+         
+         {/* Analytics Tab */}
+         <div className="w-auto flex justify-end">
+            <button 
+                onClick={() => onNavigate(WorkspaceMode.ANALYTICS)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 text-xs font-bold text-slate-600 hover:text-teal-700 transition-all shadow-sm group"
+            >
+                <BarChart2 size={14} className="text-slate-400 group-hover:text-teal-600 transition-colors"/>
+                Analytics
+            </button>
+         </div>
       </div>
 
       {/* Content */}

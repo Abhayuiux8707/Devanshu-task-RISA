@@ -54,7 +54,7 @@ const getSystemInstruction = (mode: WorkspaceMode): string => {
       TASK: Find gaps in documentation and draft new help articles.
       
       BEHAVIOR:
-      1. Search existing docs for answers.
+      1. Search existing docs for answers using Google Search when necessary.
       2. If a question is asked repeatedly but has no article, draft a new FAQ entry.
       3. Translate technical engineering notes into customer-friendly language.
       `;
@@ -97,13 +97,20 @@ export const initializeChat = async (mode: WorkspaceMode, contextData: AgentCont
     const ai = getClient();
     currentMode = mode;
     
+    // Use gemini-2.5-flash for speed and tool support
     const modelName = 'gemini-2.5-flash'; 
+
+    const tools = [];
+    if (mode === WorkspaceMode.KNOWLEDGE || mode === WorkspaceMode.TICKET) {
+        tools.push({ googleSearch: {} });
+    }
 
     chatSession = ai.chats.create({
         model: modelName,
         config: {
-        systemInstruction: getSystemInstruction(mode),
-        temperature: 0.3, 
+            systemInstruction: getSystemInstruction(mode),
+            temperature: 0.3,
+            tools: tools
         }
     });
 
@@ -138,4 +145,21 @@ export const sendMessageToAgent = async (message: string): Promise<string> => {
     console.error("Gemini API Error:", error);
     return "Error communicating with the Agent core.";
   }
+};
+
+export const searchKnowledgeBase = async (query: string): Promise<string> => {
+    const ai = getClient();
+    try {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: `Search for this in the knowledge base context: ${query}`,
+            config: {
+                tools: [{ googleSearch: {} }]
+            }
+        });
+        return response.text || "No results found.";
+    } catch (e) {
+        console.error(e);
+        return "Search unavailable.";
+    }
 };

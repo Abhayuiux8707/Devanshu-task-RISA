@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend } from 'recharts';
-import { Activity, AlertTriangle, Zap, CheckCircle2, GitBranch, Database, Terminal, User, Bot, TrendingUp, Clock, MousePointerClick } from '../ui/Icons';
+import { Activity, AlertTriangle, Zap, CheckCircle2, GitBranch, Database, Terminal, User, Bot, TrendingUp, Clock, MousePointerClick, Loader2 } from '../ui/Icons';
 
 // --- Data: Workflow Autonomy (AI vs Human) ---
-const autonomyData = [
+const initialAutonomyData = [
   { time: '09:00', aiActions: 120, humanInterventions: 5 },
   { time: '10:00', aiActions: 145, humanInterventions: 12 },
   { time: '11:00', aiActions: 160, humanInterventions: 8 },
@@ -11,6 +11,16 @@ const autonomyData = [
   { time: '13:00', aiActions: 130, humanInterventions: 15 },
   { time: '14:00', aiActions: 170, humanInterventions: 6 },
   { time: '15:00', aiActions: 150, humanInterventions: 4 },
+];
+
+const improvedAutonomyData = [
+  { time: '09:00', aiActions: 130, humanInterventions: 2 },
+  { time: '10:00', aiActions: 155, humanInterventions: 5 },
+  { time: '11:00', aiActions: 170, humanInterventions: 3 },
+  { time: '12:00', aiActions: 100, humanInterventions: 1 },
+  { time: '13:00', aiActions: 140, humanInterventions: 5 },
+  { time: '14:00', aiActions: 180, humanInterventions: 2 },
+  { time: '15:00', aiActions: 160, humanInterventions: 1 },
 ];
 
 // --- Data: SaaS Tool Usage & Errors ---
@@ -59,6 +69,19 @@ class ChartErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBounda
 }
 
 const AnalyticsWorkspace: React.FC = () => {
+  const [autonomyData, setAutonomyData] = useState(initialAutonomyData);
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [score, setScore] = useState(94);
+
+  const handleOptimize = () => {
+      setIsOptimizing(true);
+      setTimeout(() => {
+          setAutonomyData(improvedAutonomyData);
+          setScore(98);
+          setIsOptimizing(false);
+      }, 2000);
+  };
+
   return (
     <div className="flex-1 p-8 overflow-y-auto bg-slate-50 font-sans">
       
@@ -76,8 +99,13 @@ const AnalyticsWorkspace: React.FC = () => {
              <button className="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 shadow-sm flex items-center gap-2 transition-all">
                 <Clock size={14}/> Last 24 Hours
              </button>
-             <button className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold shadow-md shadow-teal-500/20 flex items-center gap-2 transition-all active:scale-95">
-                <Zap size={14}/> Optimize Workflow
+             <button 
+                onClick={handleOptimize}
+                disabled={isOptimizing}
+                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold shadow-md shadow-teal-500/20 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-70"
+             >
+                {isOptimizing ? <Loader2 size={14} className="animate-spin"/> : <Zap size={14}/>}
+                {isOptimizing ? 'Optimizing Models...' : 'Optimize Workflow'}
              </button>
         </div>
       </div>
@@ -89,7 +117,7 @@ const AnalyticsWorkspace: React.FC = () => {
                   <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">AI Autonomy Score</div>
                   <Bot size={16} className="text-teal-500"/>
               </div>
-              <div className="text-3xl font-bold text-slate-900">94%</div>
+              <div className="text-3xl font-bold text-slate-900">{score}%</div>
               <div className="text-xs text-green-600 mt-1 flex items-center gap-1 font-medium"><TrendingUp size={12}/> +2.4% vs last week</div>
           </div>
           
@@ -98,7 +126,7 @@ const AnalyticsWorkspace: React.FC = () => {
                   <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Human Interventions</div>
                   <MousePointerClick size={16} className="text-orange-500"/>
               </div>
-              <div className="text-3xl font-bold text-slate-900">42</div>
+              <div className="text-3xl font-bold text-slate-900">{isOptimizing ? '--' : 42}</div>
               <div className="text-xs text-orange-600 mt-1 font-medium">12 require review</div>
           </div>
 

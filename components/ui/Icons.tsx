@@ -55,7 +55,9 @@ import {
   ChevronDown,
   Server,
   FileText,
-  Image
+  Image,
+  Filter,
+  Loader2
 } from 'lucide-react';
 
 export {
@@ -114,5 +116,7 @@ export {
   ChevronDown,
   Server,
   FileText,
-  Image
+  Image,
+  Filter,
+  Loader2
 };

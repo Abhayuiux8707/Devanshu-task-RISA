@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { WorkspaceMode, ChatMessage, AgentContext } from '../types';
 import { initializeChat, sendMessageToAgent } from '../services/geminiService';
-import { Bot, User, CheckCircle2, Send, Sparkles, BookOpen, Clock, Activity, BarChart2 } from './ui/Icons';
+import { Bot, User, CheckCircle2, Send, Sparkles, BookOpen, Clock, Activity, BarChart2, Zap } from './ui/Icons';
 import RizaAvatar from './ui/RizaAvatar';
 
 interface RightRailProps {
@@ -14,7 +14,17 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Playbook state
+  const [playbookSteps, setPlaybookSteps] = useState([
+     { step: "Analyze Severity", status: "done", time: "2m ago" },
+     { step: "Check Status Page", status: "done", time: "1m ago" },
+     { step: "Draft Apology", status: "current", time: "Now" },
+     { step: "Notify Account Mgr", status: "pending", time: "" },
+     { step: "Apply Credit", status: "pending", time: "" }
+  ]);
 
   // Initialize chat when mode changes
   useEffect(() => {
@@ -75,11 +85,21 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
     }
   };
 
+  const advancePlaybook = () => {
+      const currentIndex = playbookSteps.findIndex(s => s.status === 'current');
+      if (currentIndex !== -1 && currentIndex < playbookSteps.length - 1) {
+          const newSteps = [...playbookSteps];
+          newSteps[currentIndex].status = 'done';
+          newSteps[currentIndex + 1].status = 'current';
+          setPlaybookSteps(newSteps);
+      }
+  };
+
   // --- Render Tabs Content ---
 
   const renderCopilot = () => (
-    <div className="flex flex-col h-full bg-slate-50/50">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex flex-col h-full bg-slate-50/50 relative">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-20">
         {messages.map((msg) => (
           <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
             <div className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user' ? 'bg-teal-600 text-white rounded-br-none' : 'bg-white text-slate-700 border border-slate-200 rounded-bl-none'}`}>
@@ -98,6 +118,24 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
         )}
         <div ref={messagesEndRef} />
       </div>
+
+      {isVoiceActive && (
+          <div className="absolute inset-0 bg-white/90 backdrop-blur-md z-10 flex flex-col items-center justify-center animate-in fade-in duration-300">
+              <div className="w-32 h-32 rounded-full bg-teal-50 border-4 border-teal-100 flex items-center justify-center mb-6 relative">
+                  <div className="absolute inset-0 rounded-full border-4 border-teal-500 animate-ping opacity-20"></div>
+                  <Zap size={48} className="text-teal-600"/>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Live Voice Mode</h3>
+              <p className="text-slate-500 text-sm mb-8">Listening...</p>
+              <button 
+                onClick={() => setIsVoiceActive(false)}
+                className="px-6 py-2 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 transition-colors"
+              >
+                  End Session
+              </button>
+          </div>
+      )}
+
       <div className="p-4 bg-white border-t border-slate-200">
         <div className="relative">
           <textarea
@@ -107,6 +145,13 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
             placeholder="Ask Copilot..."
             className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 pr-10 text-sm text-slate-800 focus:outline-none focus:border-teal-500/50 resize-none h-20 placeholder-slate-400"
           />
+          <button 
+            onClick={() => setIsVoiceActive(true)}
+            className="absolute bottom-3 left-3 text-slate-400 hover:text-teal-600 transition-colors"
+            title="Enable Voice Mode"
+          >
+             <Zap size={16}/>
+          </button>
           <button onClick={handleSend} disabled={isLoading || !inputValue.trim()} className="absolute bottom-3 right-3 text-teal-600 hover:text-teal-700 disabled:opacity-30">
             <Send size={18} />
           </button>
@@ -169,14 +214,11 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
                 <span className="text-[10px] bg-white px-2 py-0.5 rounded text-teal-600 font-bold">RUNNING</span>
              </div>
              <div className="divide-y divide-slate-100">
-                 {[
-                     { step: "Analyze Severity", status: "done", time: "2m ago" },
-                     { step: "Check Status Page", status: "done", time: "1m ago" },
-                     { step: "Draft Apology", status: "current", time: "Now" },
-                     { step: "Notify Account Mgr", status: "pending", time: "" },
-                     { step: "Apply Credit", status: "pending", time: "" }
-                 ].map((s, i) => (
-                     <div key={i} className={`p-3 flex items-start gap-3 ${s.status === 'current' ? 'bg-teal-50/30' : ''}`}>
+                 {playbookSteps.map((s, i) => (
+                     <div 
+                        key={i} 
+                        className={`p-3 flex items-start gap-3 transition-colors ${s.status === 'current' ? 'bg-teal-50/30' : ''}`}
+                    >
                          <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] border ${
                              s.status === 'done' ? 'bg-green-500 border-green-500 text-white' : 
                              s.status === 'current' ? 'bg-white border-teal-500 text-teal-600 animate-pulse' : 
@@ -195,8 +237,11 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
                  ))}
              </div>
              <div className="p-3 bg-slate-50 border-t border-slate-100">
-                 <button className="w-full py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-teal-600 transition-colors">
-                     View Full Workflow
+                 <button 
+                    onClick={advancePlaybook}
+                    className="w-full py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-teal-600 transition-colors"
+                 >
+                     Mark Step Complete
                  </button>
              </div>
         </div>

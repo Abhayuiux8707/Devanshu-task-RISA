@@ -1,9 +1,9 @@
-import React from 'react';
-import {  Inbox, AlertTriangle, Clock, Smile, Meh, Frown, CheckCircle2 } from '../ui/Icons';
-import { Ticket } from '../../types';
+import React, { useState } from 'react';
+import {  Inbox, AlertTriangle, Clock, Smile, Meh, Frown, CheckCircle2, Filter, Loader2 } from '../ui/Icons';
+import { Ticket, WorkspaceProps, WorkspaceMode } from '../../types';
 
 // Mock Ticket Data
-const tickets: Ticket[] = [
+const initialTickets: Ticket[] = [
   { id: '4492', subject: 'Refund Request - Unhappy with Service', customer: 'Acme Corp', sentimentScore: -0.8, urgency: 'CRITICAL', status: 'new', channel: 'email', lastUpdated: '10m ago' },
   { id: '4491', subject: 'How do I add a user?', customer: 'StartUp Inc', sentimentScore: 0.5, urgency: 'LOW', status: 'new', channel: 'chat', lastUpdated: '15m ago' },
   { id: '4490', subject: 'API Latency Issues', customer: 'TechGiant', sentimentScore: -0.2, urgency: 'HIGH', status: 'open', channel: 'email', lastUpdated: '1h ago' },
@@ -11,23 +11,74 @@ const tickets: Ticket[] = [
   { id: '4488', subject: 'Feature Request: Dark Mode', customer: 'DevUser', sentimentScore: 0.8, urgency: 'LOW', status: 'resolved', channel: 'email', lastUpdated: '1d ago' },
 ];
 
-const QueueWorkspace: React.FC = () => {
+const QueueWorkspace: React.FC<WorkspaceProps> = ({ onNavigate }) => {
+  const [tickets, setTickets] = useState(initialTickets);
+  const [isAssigning, setIsAssigning] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [assignedCount, setAssignedCount] = useState(0);
+
+  const handleAutoAssign = () => {
+      setIsAssigning(true);
+      // Simulate API call
+      setTimeout(() => {
+          setTickets(prev => prev.slice(0, 3)); // Remove 2 tickets as "assigned"
+          setAssignedCount(prev => prev + 2);
+          setIsAssigning(false);
+      }, 1500);
+  };
+
+  const handleFilterToggle = () => {
+      setIsFilterOpen(!isFilterOpen);
+  };
+
   return (
-    <div className="flex-1 p-8 overflow-y-auto bg-slate-50">
+    <div className="flex-1 p-8 overflow-y-auto bg-slate-50 relative">
+      
+      {/* Toast Notification for Auto-Assign */}
+      {assignedCount > 0 && (
+          <div className="absolute top-4 right-8 bg-teal-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-top-4 fade-in duration-300">
+              <CheckCircle2 size={16}/>
+              <span className="text-sm font-bold">{assignedCount} Tickets assigned to you by Risa AI.</span>
+          </div>
+      )}
+
       <div className="mb-8 flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Support Queue</h2>
           <div className="flex gap-6 text-sm text-slate-500 font-mono">
-            <span className="flex items-center gap-2"><Inbox size={14}/> 5 New Tickets</span>
+            <span className="flex items-center gap-2"><Inbox size={14}/> {tickets.length} New Tickets</span>
             <span className="flex items-center gap-2 text-red-600"><AlertTriangle size={14}/> 1 Critical</span>
           </div>
         </div>
-        <div className="flex gap-3">
-            <button className="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 transition-colors shadow-sm">
-                Filter View
+        <div className="flex gap-3 relative">
+            <button 
+                onClick={handleFilterToggle}
+                className={`px-4 py-2 bg-white hover:bg-slate-50 border ${isFilterOpen ? 'border-teal-500 text-teal-600' : 'border-slate-200 text-slate-700'} rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2`}
+            >
+                <Filter size={16}/> Filter View
             </button>
-            <button className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold shadow-md shadow-teal-500/20 transition-all flex items-center gap-2">
-                <CheckCircle2 size={16}/> Auto-Assign Tickets
+            
+            {/* Filter Dropdown */}
+            {isFilterOpen && (
+                <div className="absolute top-full mt-2 right-0 bg-white border border-slate-200 rounded-xl shadow-xl w-48 z-20 p-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                    <div className="text-xs font-bold text-slate-400 uppercase px-2 py-1">Sort By</div>
+                    <button className="w-full text-left px-2 py-1.5 hover:bg-slate-50 rounded text-sm text-slate-700">Urgency (High to Low)</button>
+                    <button className="w-full text-left px-2 py-1.5 hover:bg-slate-50 rounded text-sm text-slate-700">Newest First</button>
+                    <div className="h-px bg-slate-100 my-1"></div>
+                    <div className="text-xs font-bold text-slate-400 uppercase px-2 py-1">Filter</div>
+                    <button className="w-full text-left px-2 py-1.5 hover:bg-slate-50 rounded text-sm text-slate-700 flex items-center justify-between">
+                        Email Only <span className="bg-slate-100 text-[10px] px-1 rounded text-slate-500">3</span>
+                    </button>
+                </div>
+            )}
+
+            <button 
+                onClick={handleAutoAssign}
+                disabled={isAssigning}
+                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold shadow-md shadow-teal-500/20 transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
+            >
+                {isAssigning ? <Loader2 size={16} className="animate-spin"/> : <CheckCircle2 size={16}/>}
+                {isAssigning ? 'Analzying Workload...' : 'Auto-Assign Tickets'}
             </button>
         </div>
       </div>
@@ -60,7 +111,11 @@ const QueueWorkspace: React.FC = () => {
         </div>
         
         {tickets.map((ticket) => (
-            <div key={ticket.id} className="grid grid-cols-12 gap-4 p-4 border-b border-slate-100 items-center hover:bg-slate-50 transition-colors cursor-pointer group last:border-0">
+            <div 
+                key={ticket.id} 
+                onClick={() => onNavigate(WorkspaceMode.TICKET)}
+                className="grid grid-cols-12 gap-4 p-4 border-b border-slate-100 items-center hover:bg-slate-50 transition-colors cursor-pointer group last:border-0"
+            >
                 <div className="col-span-4">
                     <div className="text-sm font-bold text-slate-800 group-hover:text-teal-600 transition-colors">{ticket.subject}</div>
                     <div className="text-xs text-slate-500 font-mono mt-1">#{ticket.id} • {ticket.customer}</div>

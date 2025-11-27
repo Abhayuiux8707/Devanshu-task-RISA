@@ -26,6 +26,10 @@ const DashboardOverlay: React.FC<DashboardOverlayProps> = ({ isOpen, onClose, in
     }
   }, [isOpen, initialMode]);
 
+  const handleNavigate = (mode: WorkspaceMode) => {
+      setActiveMode(mode);
+  };
+
   // Simulated context data that changes based on view
   const getContextData = () => {
     switch (activeMode) {
@@ -45,9 +49,9 @@ const DashboardOverlay: React.FC<DashboardOverlayProps> = ({ isOpen, onClose, in
   const renderWorkspace = () => {
     switch (activeMode) {
       case WorkspaceMode.QUEUE:
-        return <QueueWorkspace />; 
+        return <QueueWorkspace onNavigate={handleNavigate} />; 
       case WorkspaceMode.TICKET:
-        return <TicketWorkspace />; 
+        return <TicketWorkspace onNavigate={handleNavigate} />; 
       case WorkspaceMode.ANALYTICS:
         return <AnalyticsWorkspace />; 
       case WorkspaceMode.ESCALATION:
@@ -55,7 +59,7 @@ const DashboardOverlay: React.FC<DashboardOverlayProps> = ({ isOpen, onClose, in
       case WorkspaceMode.KNOWLEDGE:
         return <div className="flex-1 bg-slate-50 flex items-center justify-center text-slate-400">Knowledge Base Indexing...</div>;
       default:
-        return <QueueWorkspace />;
+        return <QueueWorkspace onNavigate={handleNavigate} />;
     }
   };
 
@@ -94,7 +98,9 @@ const DashboardOverlay: React.FC<DashboardOverlayProps> = ({ isOpen, onClose, in
                  <span className="font-bold text-slate-900 text-sm tracking-tight flex items-center gap-1">
                     Risa Support <ChevronDown size={12} className="text-slate-400"/>
                  </span>
-                 <span className="text-[10px] text-slate-400 font-mono">Workspace A</span>
+                 <span className="text-[10px] text-slate-400 font-mono">
+                    {activeMode === 'QUEUE' ? 'Triage Desk' : activeMode === 'TICKET' ? 'Case View' : activeMode === 'ANALYTICS' ? 'Ops Center' : 'Escalation'}
+                 </span>
              </div>
           </button>
         </div>
