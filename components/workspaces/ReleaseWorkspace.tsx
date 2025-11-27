@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend } from 'recharts';
 import { Activity, AlertTriangle, Zap, CheckCircle2, GitBranch, Database, Terminal, User, Bot, TrendingUp, Clock, MousePointerClick } from '../ui/Icons';
 
@@ -37,13 +37,10 @@ interface ErrorBoundaryState {
 }
 
 // Simple Error Boundary Component for the Chart Section
-class ChartErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = {
-      hasError: false
-    };
-  }
+class ChartErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state: ErrorBoundaryState = {
+    hasError: false
+  };
 
   static getDerivedStateFromError(_: Error): ErrorBoundaryState {
     return { hasError: true };

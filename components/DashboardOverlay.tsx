@@ -62,7 +62,7 @@ const DashboardOverlay: React.FC<DashboardOverlayProps> = ({ isOpen, onClose, in
   if (!isOpen) return null;
 
   return (
-    <div className="absolute inset-0 z-40 bg-slate-50 text-slate-800 font-sans flex flex-col animate-in slide-in-from-bottom-20 fade-in duration-500 overscroll-none">
+    <div className="fixed inset-0 z-[100] bg-slate-50 text-slate-800 font-sans flex flex-col animate-in slide-in-from-bottom-10 fade-in duration-300 overscroll-none">
       
       {/* Top Bar (Browser Shell) */}
       <div className="h-14 flex items-center px-4 justify-between shrink-0 z-30 bg-white border-b border-slate-200 shadow-sm relative">
