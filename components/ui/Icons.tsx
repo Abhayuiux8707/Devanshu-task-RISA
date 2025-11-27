@@ -54,7 +54,8 @@ import {
   Paperclip,
   ChevronDown,
   Server,
-  FileText
+  FileText,
+  Image
 } from 'lucide-react';
 
 export {
@@ -112,5 +113,6 @@ export {
   Paperclip,
   ChevronDown,
   Server,
-  FileText
+  FileText,
+  Image
 };

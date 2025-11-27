@@ -169,7 +169,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
 
   const steps = [
     {
-      title: "Welcome to Riza",
+      title: "Welcome to Risa",
       subtitle: "The AI-Native OS for Support.",
       description: "Replace your helpdesk clutter with an intelligent, agent-first browser designed for speed and empathy.",
       demo: (
@@ -185,7 +185,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     {
       title: "Intelligent Triage",
       subtitle: "Focus on what matters.",
-      description: "Riza automatically detects sentiment and urgency, reordering your queue so you tackle critical issues first.",
+      description: "Risa automatically detects sentiment and urgency, reordering your queue so you tackle critical issues first.",
       demo: <div className="flex items-center justify-center h-full animate-fade-in-up"><TriageDemo /></div>
     },
     {
@@ -197,7 +197,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     {
       title: "Self-Driving Analytics",
       subtitle: "Data Science included.",
-      description: "Forget spreadsheets. Riza monitors CSAT and Ops metrics in real-time, proactively flagging operational risks.",
+      description: "Forget spreadsheets. Risa monitors CSAT and Ops metrics in real-time, proactively flagging operational risks.",
       demo: <div className="flex items-center justify-center h-full animate-fade-in-up"><LiveGraphDemo /></div>
     }
   ];
@@ -252,7 +252,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                     onClick={handleNext}
                     className="group flex items-center gap-3 bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl hover:shadow-2xl active:scale-95"
                 >
-                    {step === steps.length - 1 ? "Launch Riza Browser" : "Continue"}
+                    {step === steps.length - 1 ? "Launch Risa Browser" : "Continue"}
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
                 {step < steps.length - 1 && (

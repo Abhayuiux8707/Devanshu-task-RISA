@@ -98,7 +98,7 @@ const QueueWorkspace: React.FC = () => {
       {/* AI Insight */}
       <div className="mt-6 bg-red-50 p-6 rounded-xl border border-red-100">
         <h4 className="text-red-700 font-bold text-sm mb-2 flex items-center gap-2">
-            <AlertTriangle size={16}/> RIZA PRIORITY ALERT
+            <AlertTriangle size={16}/> RISA PRIORITY ALERT
         </h4>
         <p className="text-sm text-red-900/80 leading-relaxed font-mono">
             Ticket #4492 (Acme Corp) has a sentiment score of -0.8 (Critical). 

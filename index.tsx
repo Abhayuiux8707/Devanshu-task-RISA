@@ -14,8 +14,8 @@ try {
       <App />
     </React.StrictMode>
   );
-  console.log("Riza App Mounted Successfully");
+  console.log("Risa App Mounted Successfully");
 } catch (error) {
-  console.error("Failed to mount Riza App:", error);
+  console.error("Failed to mount Risa App:", error);
   rootElement.innerHTML = `<div style="color:red; padding:20px;"><h1>Application Error</h1><pre>${error instanceof Error ? error.message : String(error)}</pre></div>`;
 }

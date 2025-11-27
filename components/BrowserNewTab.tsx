@@ -40,7 +40,7 @@ const BrowserNewTab: React.FC<BrowserNewTabProps> = ({ onNavigate }) => {
          {/* URL Bar */}
          <div className="flex-1 max-w-2xl mx-auto bg-slate-100 rounded-lg h-7 flex items-center px-3 text-xs text-slate-500 border border-transparent font-mono group hover:border-teal-500/50 hover:bg-white transition-all cursor-text shadow-inner">
             <Globe size={12} className="mr-2 text-teal-600 group-hover:text-teal-500 transition-colors"/>
-            <span className="text-slate-400">riza://</span>
+            <span className="text-slate-400">risa://</span>
             <span className="text-slate-600">support.dashboard</span>
          </div>
          <div className="w-20"></div>
@@ -61,7 +61,7 @@ const BrowserNewTab: React.FC<BrowserNewTabProps> = ({ onNavigate }) => {
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-teal-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <Bot size={40} className="text-slate-400 group-hover:text-teal-500 transition-colors duration-500" />
                 </div>
-                <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Riza Support AI</h1>
+                <h1 className="text-3xl font-semibold text-slate-900 tracking-tight">Risa Support AI</h1>
                 <p className="text-slate-500">How can I assist you today?</p>
             </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend } from 'recharts';
 import { Activity, AlertTriangle, Zap, CheckCircle2, GitBranch, Database, Terminal, User, Bot, TrendingUp, Clock, MousePointerClick } from '../ui/Icons';
 
@@ -37,14 +37,22 @@ interface ErrorBoundaryState {
 }
 
 // Simple Error Boundary Component for the Chart Section
-class ChartErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ChartErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false
+    };
   }
-  static getDerivedStateFromError() {
+
+  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
     return { hasError: true };
   }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("Chart Error Boundary caught an error", error, errorInfo);
+  }
+
   render() {
     if (this.state.hasError) {
       return <div className="h-full flex items-center justify-center text-slate-400 text-sm">Chart visualization unavailable</div>;
@@ -62,7 +70,7 @@ const AnalyticsWorkspace: React.FC = () => {
         <div>
           <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Workflow Intelligence</h2>
           <div className="flex items-center gap-4 text-sm font-mono text-slate-500">
-             <span className="flex items-center gap-2 px-2 py-1 bg-teal-50 text-teal-700 rounded border border-teal-100"><Bot size={14}/> Riza Core v2.4</span>
+             <span className="flex items-center gap-2 px-2 py-1 bg-teal-50 text-teal-700 rounded border border-teal-100"><Bot size={14}/> Risa Core v2.4</span>
              <span className="text-slate-300">|</span>
              <span className="flex items-center gap-2"><Activity size={14}/> Real-time Monitoring</span>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { WorkspaceMode, ChatMessage, AgentContext } from '../types';
 import { initializeChat, sendMessageToAgent } from '../services/geminiService';
-import { Bot, User, CheckCircle2, Send, Sparkles, AlertTriangle, BookOpen, Clock, Zap } from './ui/Icons';
+import { Bot, User, CheckCircle2, Send, Sparkles, BookOpen, Clock, Activity, BarChart2 } from './ui/Icons';
 import RizaAvatar from './ui/RizaAvatar';
 
 interface RightRailProps {
@@ -10,7 +10,7 @@ interface RightRailProps {
 }
 
 const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
-  const [activeTab, setActiveTab] = useState<'copilot' | '360' | 'playbooks'>('copilot');
+  const [activeTab, setActiveTab] = useState<'copilot' | '360' | 'playbooks' | 'analytics'>('copilot');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +47,7 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
       case WorkspaceMode.QUEUE: return "Queue Intelligence Active. Detecting 3 anomalies in ticket volume.";
       case WorkspaceMode.TICKET: return "Copilot Ready. I've drafted a reply based on the SLA policy.";
       case WorkspaceMode.ESCALATION: return "Escalation Protocols Loaded. Please provide the incident summary.";
-      default: return "Riza Agent Online.";
+      default: return "Risa Agent Online.";
     }
   };
 
@@ -85,7 +85,7 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
             <div className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user' ? 'bg-teal-600 text-white rounded-br-none' : 'bg-white text-slate-700 border border-slate-200 rounded-bl-none'}`}>
               <div className="whitespace-pre-wrap">{msg.text}</div>
             </div>
-            <span className="text-[10px] text-slate-400 mt-1 px-1">{msg.role === 'user' ? 'You' : 'Riza AI'}</span>
+            <span className="text-[10px] text-slate-400 mt-1 px-1">{msg.role === 'user' ? 'You' : 'Risa AI'}</span>
           </div>
         ))}
         {isLoading && (
@@ -203,29 +203,70 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
     </div>
   );
 
+  const renderAnalytics = () => (
+      <div className="p-4 h-full bg-slate-50 overflow-y-auto">
+          <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Activity size={16} className="text-teal-600"/> Session Stats
+          </h3>
+          <div className="space-y-4">
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                  <div className="text-xs text-slate-500 uppercase font-bold mb-1">Handling Time</div>
+                  <div className="text-2xl font-bold text-slate-800">4m 12s</div>
+                  <div className="text-xs text-green-600 font-bold mt-1">-30s vs Avg</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                  <div className="text-xs text-slate-500 uppercase font-bold mb-1">AI Usage</div>
+                  <div className="text-2xl font-bold text-slate-800">85%</div>
+                  <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2">
+                      <div className="bg-teal-500 h-1.5 rounded-full w-[85%]"></div>
+                  </div>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                  <div className="text-xs text-slate-500 uppercase font-bold mb-1">Sentiment Shift</div>
+                  <div className="flex items-center justify-between">
+                      <span className="text-red-500 font-bold text-sm">Negative</span>
+                      <span className="text-slate-300">→</span>
+                      <span className="text-green-500 font-bold text-sm">Neutral</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  );
+
   return (
-    <div className="flex flex-col h-full bg-white border-l border-slate-200 w-80 shrink-0 shadow-lg z-20">
+    <div className="flex flex-col h-full bg-white border-l border-slate-200 w-80 shrink-0 z-20">
       {/* Tabs Header */}
       <div className="h-12 border-b border-slate-200 flex items-center bg-white">
           <button 
             onClick={() => setActiveTab('copilot')}
-            className={`flex-1 h-full flex items-center justify-center gap-2 text-xs font-bold transition-colors border-b-2 ${activeTab === 'copilot' ? 'text-teal-600 border-teal-600 bg-teal-50/50' : 'text-slate-500 border-transparent hover:bg-slate-50'}`}
+            className={`flex-1 h-full flex items-center justify-center transition-colors border-b-2 ${activeTab === 'copilot' ? 'text-teal-600 border-teal-600 bg-teal-50/50' : 'text-slate-400 border-transparent hover:bg-slate-50'}`}
+            title="Copilot"
           >
-            <Bot size={14}/> Copilot
+            <Bot size={16}/>
           </button>
           <div className="w-px h-4 bg-slate-200"></div>
           <button 
             onClick={() => setActiveTab('360')}
-            className={`flex-1 h-full flex items-center justify-center gap-2 text-xs font-bold transition-colors border-b-2 ${activeTab === '360' ? 'text-blue-600 border-blue-600 bg-blue-50/50' : 'text-slate-500 border-transparent hover:bg-slate-50'}`}
+            className={`flex-1 h-full flex items-center justify-center transition-colors border-b-2 ${activeTab === '360' ? 'text-blue-600 border-blue-600 bg-blue-50/50' : 'text-slate-400 border-transparent hover:bg-slate-50'}`}
+            title="Customer 360"
           >
-            <User size={14}/> 360°
+            <User size={16}/>
           </button>
           <div className="w-px h-4 bg-slate-200"></div>
           <button 
             onClick={() => setActiveTab('playbooks')}
-            className={`flex-1 h-full flex items-center justify-center gap-2 text-xs font-bold transition-colors border-b-2 ${activeTab === 'playbooks' ? 'text-purple-600 border-purple-600 bg-purple-50/50' : 'text-slate-500 border-transparent hover:bg-slate-50'}`}
+            className={`flex-1 h-full flex items-center justify-center transition-colors border-b-2 ${activeTab === 'playbooks' ? 'text-purple-600 border-purple-600 bg-purple-50/50' : 'text-slate-400 border-transparent hover:bg-slate-50'}`}
+            title="Playbooks"
           >
-            <Sparkles size={14}/> Actions
+            <Sparkles size={16}/>
+          </button>
+          <div className="w-px h-4 bg-slate-200"></div>
+          <button 
+            onClick={() => setActiveTab('analytics')}
+            className={`flex-1 h-full flex items-center justify-center transition-colors border-b-2 ${activeTab === 'analytics' ? 'text-orange-600 border-orange-600 bg-orange-50/50' : 'text-slate-400 border-transparent hover:bg-slate-50'}`}
+            title="Session Analytics"
+          >
+            <BarChart2 size={16}/>
           </button>
       </div>
 
@@ -234,6 +275,7 @@ const RightRail: React.FC<RightRailProps> = ({ mode, contextData }) => {
           {activeTab === 'copilot' && renderCopilot()}
           {activeTab === '360' && render360()}
           {activeTab === 'playbooks' && renderPlaybooks()}
+          {activeTab === 'analytics' && renderAnalytics()}
       </div>
     </div>
   );

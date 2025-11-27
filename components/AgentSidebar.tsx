@@ -48,7 +48,7 @@ const AgentSidebar: React.FC<AgentSidebarProps> = ({ mode, contextData }) => {
       case WorkspaceMode.TICKET: return "Case Assistant Ready. I have analyzed the customer history. Need a draft?";
       case WorkspaceMode.ANALYTICS: return "Operations Analyst here. CSAT is stable. Query me for specific agent stats.";
       case WorkspaceMode.KNOWLEDGE: return "Knowledge Architect. I can draft articles or search documentation.";
-      default: return "Riza Agent Online.";
+      default: return "Risa Agent Online.";
     }
   };
 
@@ -95,7 +95,7 @@ const AgentSidebar: React.FC<AgentSidebarProps> = ({ mode, contextData }) => {
       <div className="h-16 border-b border-slate-100 flex items-center px-4 justify-between bg-white/50 backdrop-blur-sm">
         <div className="flex items-center gap-2 text-teal-600 font-bold">
           <Bot size={18} />
-          <span>Riza Agent</span>
+          <span>Risa Agent</span>
         </div>
         <div className="text-xs text-slate-400 font-mono uppercase tracking-wider">
           {mode}
@@ -117,7 +117,7 @@ const AgentSidebar: React.FC<AgentSidebarProps> = ({ mode, contextData }) => {
               }`}
             >
               <div className={`whitespace-pre-wrap font-mono text-[10px] mb-1 uppercase tracking-wider opacity-70 ${msg.role === 'user' ? 'text-teal-100' : 'text-slate-400'}`}>
-                {msg.role === 'user' ? 'YOU' : 'RIZA'}
+                {msg.role === 'user' ? 'YOU' : 'RISA'}
               </div>
               <div className="whitespace-pre-wrap">{msg.text}</div>
             </div>

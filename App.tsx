@@ -32,7 +32,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen w-full relative bg-slate-50 overflow-hidden font-sans selection:bg-teal-500 selection:text-white">
+    <div className="fixed inset-0 w-full h-[100dvh] bg-slate-50 overflow-hidden font-sans selection:bg-teal-500 selection:text-white">
       {/* 1. Underlying Browser Landing Page */}
       <BrowserNewTab onNavigate={handleOpenDashboard} />
 
@@ -50,7 +50,7 @@ function App() {
             <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-max bg-white px-4 py-2 rounded-2xl shadow-xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 pointer-events-none">
                 <div className="text-xs font-bold text-slate-600 flex items-center gap-2">
                     <Sparkles size={12} className="text-teal-500" />
-                    Open Riza Dashboard
+                    Open Risa Dashboard
                 </div>
                 {/* Arrow */}
                 <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-slate-100 transform rotate-45"></div>
@@ -63,7 +63,7 @@ function App() {
 
             {/* Label Pill */}
             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-md border border-slate-200 px-3 py-1 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Riza AI</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Risa AI</span>
             </div>
         </div>
       </div>
